@@ -14,9 +14,9 @@
     name: "table-main",
     data() {
       const item = {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
+        date: '2019-02-25',
+        name: 'fimi.zhuang',
+        address: '广州市 华南农业大学'
       };
       return {
         isCollapse: false,
