@@ -9,27 +9,17 @@
 </template>
 
 <script>
-  import HelloWorld from './components/HelloWorld.vue'
   import Header from './components/base/header-item'
   import Aside from './components/base/aside-item'
   import Main from './components/base/main-item'
 
   export default {
     data() {
-      return {
-      }
-    },
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
+      return {}
     },
     name: 'app',
     components: {
-      HelloWorld, Header, Aside, Main
+      Header, Aside, Main
     }
   }
 </script>
@@ -44,8 +34,12 @@
   /*margin-top: 60px;*/
   /*}*/
 
-
   .el-footer {
     background-color: #409EFF;
+  }
+
+  /*去掉 router-link 下划线*/
+  a {
+    text-decoration: none;
   }
 </style>

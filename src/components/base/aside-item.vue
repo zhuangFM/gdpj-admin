@@ -5,15 +5,21 @@
         <template slot="title"><i class="el-icon-message"></i>导航一</template>
         <el-menu-item-group>
           <template slot="title">分组一</template>
-          <el-menu-item index="1-1">
-            <router-link to="/">Home</router-link>
-          </el-menu-item>
-          <el-menu-item index="1-2">
-            <router-link to="/table-main">TableMain</router-link>
-          </el-menu-item>
+          <router-link to="/">
+            <el-menu-item index="1-1">
+              Home
+            </el-menu-item>
+          </router-link>
+          <router-link to="/table-main">
+            <el-menu-item index="1-2">
+              TableMain
+            </el-menu-item>
+          </router-link>
         </el-menu-item-group>
         <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
+          <router-link to="/foodstuff-manage-page">
+            <el-menu-item index="1-3">食品管理</el-menu-item>
+          </router-link>
         </el-menu-item-group>
         <el-submenu index="1-4">
           <template slot="title">选项4</template>
@@ -55,18 +61,27 @@
 </template>
 
 <script>
-    export default {
-        name: "aside-item",
-      data(){
-          return {
-
-          }
+  export default {
+    name: "aside-item",
+    data() {
+      return {
+        isCollapse: false,
+      }
+    },
+    methods: {
+      handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleClose(key, keyPath) {
+        console.log(key, keyPath);
       }
     }
+  }
 </script>
 
 <style scoped>
   .el-aside {
     color: #409EFF;
   }
+
 </style>

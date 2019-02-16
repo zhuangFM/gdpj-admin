@@ -19,7 +19,6 @@
         address: '广州市 华南农业大学'
       };
       return {
-        isCollapse: false,
         tableData: Array(20).fill(item)
       }
     }
