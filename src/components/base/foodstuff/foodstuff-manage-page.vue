@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="6">
-        <el-button type="primary" icon="el-icon-add">Add</el-button>
+        <el-button type="primary" icon="el-icon-plus">新增</el-button>
       </el-col>
     </el-row>
 
@@ -16,6 +16,19 @@
         <el-table-column prop="inventory" label="库存" width="180"></el-table-column>
         <el-table-column prop="isDiscount" label="是否折扣" width="180"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>
+        <el-table-column prop="" label="操作">
+          <el-button-group>
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+              <el-button type="primary" icon="el-icon-edit"></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看" placement="top">
+              <el-button type="primary" icon="el-icon-view"></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除" placement="top">
+              <el-button type="primary" icon="el-icon-delete"></el-button>
+            </el-tooltip>
+          </el-button-group>
+        </el-table-column>
       </el-table>
     </el-row>
   </div>
