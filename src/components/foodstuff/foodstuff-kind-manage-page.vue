@@ -7,7 +7,7 @@
     </el-row>
 
     <el-row>
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中">
         <el-table-column prop="name" label="食品类名" sortable width="180"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
         <el-table-column prop="creator" label="创建人" width="180"></el-table-column>
@@ -86,7 +86,8 @@
           desc: [
             { required: true, message: '请填写食品描述', trigger: 'blur' }
           ]
-        }
+        },
+        loading:true,
       }
     },
     mounted() {
@@ -94,11 +95,10 @@
     },
     methods: {
       loadTableData() {
-        var $this = this
-        $this.$http.get("/api/foodstuff-module/get_all_foodstuff_kind").then((data) => {
+        this.$http.get("/api/foodstuff-module/get_all_foodstuff_kind").then((data) => {
           console.log(data.body);
-          $this.tableData = data.body.foodstuffKindList;
-          // $this.total = data.body.foodstuffList.total;
+          this.tableData = data.body.foodstuffKindList;
+          this.loading = false;
         })
       },
       handleSizeChange(val) {
