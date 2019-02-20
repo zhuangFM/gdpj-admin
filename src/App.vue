@@ -20,7 +20,7 @@
     name: 'app',
     components: {
       Header, Aside, Main
-    }
+    },
   }
 </script>
 

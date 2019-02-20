@@ -2,7 +2,7 @@
   <div>
     <el-row>
       <el-col :span="6">
-        <el-button type="primary" icon="el-icon-plus" @click="dialogFormVisible = true">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addNewItem">新增</el-button>
       </el-col>
     </el-row>
 
@@ -24,7 +24,7 @@
                 <el-button type="primary" icon="el-icon-view"></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="删除" placement="top">
-                <el-button type="primary" icon="el-icon-delete"></el-button>
+                <el-button type="primary" icon="el-icon-delete" @click="deleteData(scope.row)"></el-button>
               </el-tooltip>
             </el-button-group>
           </template>
@@ -115,13 +115,22 @@
         this.loadTableData();
         console.log(`当前页: ${val}`);
       },
+      addNewItem() {
+        for (var key in this.form) {
+          this.form[key] = '';
+        }
+        this.dialogFormVisible = true;
+      },
       submitData(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.form);
             this.$http.post("/api/foodstuff-module/save_foodstuff_kind", [this.form]).then((data) => {
               console.log(data.body);
+              this.showMessage('success', '操作成功！');
+              this.loadTableData();
             }, (response) => {
+              this.showMessage("warning", response);
               console.log("request error")
               // 响应错误回调
             })
@@ -132,13 +141,37 @@
           }
         });
       },
+      showMessage(type, msg) {
+        this.$message({
+          message: msg,
+          type: type
+        });
+      },
       modifyData(rowData) {
-        // console.log(rowData)
-        this.form = rowData;
+        for (var key in this.form) {
+          this.form[key] = rowData[key];
+        }
         this.dialogFormVisible = true;
       },
-      changeCurrentRowDate(rowData) {
-        this.currentRowDate = rowData;
+      deleteData(rowData) {
+        this.$confirm('此操作将永久该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get("/api/foodstuff-module/delete_foodstuff_kind_by_id", {params: {id: rowData.id}}).then((data) => {
+            this.showMessage("success", "操作成功！")
+            console.log("successfully! URI : /api/foodstuff-module/delete_foodstuff_kind_by_id");
+            console.log(data.body);
+            this.loadTableData();
+          }, (response) => {
+            this.showMessage("warning", response);
+            console.log("request error")
+            // 响应错误回调
+          })
+        }).catch(() => {
+          this.showMessage("info", "已取消删除");
+        });
       }
     }
   }

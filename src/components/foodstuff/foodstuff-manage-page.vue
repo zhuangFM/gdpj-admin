@@ -2,10 +2,9 @@
   <div>
     <el-row>
       <el-col :span="6">
-        <el-button type="primary" icon="el-icon-plus" @click="dialogFormVisible = true">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addNewItem">新增</el-button>
       </el-col>
     </el-row>
-
     <el-row>
       <el-table :data="tableData" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中">
         <el-table-column prop="name" label="商品名" sortable width="180"></el-table-column>
@@ -17,17 +16,19 @@
         <el-table-column prop="isDiscount" label="是否折扣" width="180"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>
         <el-table-column prop="" label="操作">
-          <el-button-group>
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-              <el-button type="primary" icon="el-icon-edit"></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="查看" placement="top">
-              <el-button type="primary" icon="el-icon-view"></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top">
-              <el-button type="primary" icon="el-icon-delete"></el-button>
-            </el-tooltip>
-          </el-button-group>
+          <template slot-scope="scope">
+            <el-button-group>
+              <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                <el-button type="primary" icon="el-icon-edit" @click="modifyData(scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="查看" placement="top">
+                <el-button type="primary" icon="el-icon-view" @click="showImages(scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                <el-button type="primary" icon="el-icon-delete" @click="deleteData(scope.row)"></el-button>
+              </el-tooltip>
+            </el-button-group>
+          </template>
         </el-table-column>
       </el-table>
       <div class="block">
@@ -58,7 +59,7 @@
           <el-input v-model="form.origin" autocomplete="off" clearable></el-input>
         </el-form-item>
         <el-form-item label="是否折扣" prop="isDiscount">
-          <el-switch v-model="form.isDiscount" active-value="1" inactive-value="0"></el-switch>
+          <el-switch v-model="form.isDiscount" :active-value="activeVal" :inactive-value="inActiveVal"></el-switch>
         </el-form-item>
         <el-form-item label="库存" prop="inventory">
           <el-input v-model.number="form.inventory" autocomplete="off" clearable></el-input>
@@ -77,6 +78,30 @@
         <el-button type="primary" @click="submitData('form')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="图片查看" :visible.sync="dialogImagesVisible">
+      <el-dialog width="30%" title="图片上传" :visible.sync="dialogImagesUploadVisible" append-to-body>
+        <el-upload
+          class="upload-demo"
+          :action="imageUploadUri"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-success="uploadSuccess"
+          list-type="picture"
+          :data="{'id':showImagesRowId}">
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+      </el-dialog>
+      <div class="block">
+        <el-button type="primary" @click="dialogImagesUploadVisible = true">添加图片</el-button>
+        <el-carousel height="">
+          <el-carousel-item v-for="item in imagesPath" :key="item">
+            <img :src="'\\static\\images\\'+showImagesRowId+'\\'+item">
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,6 +115,8 @@
         total: 0,
         pageSize: 10,
         dialogFormVisible: false,
+        dialogImagesVisible: false,
+        dialogImagesUploadVisible: false,
         formLabelWidth: '100px',
         formTitle: '新增食品',
         form: {
@@ -108,6 +135,8 @@
           inventory: '',
           imagePath: '',
         },
+        activeVal: 1,
+        inActiveVal: 0,
         rules: {
           name: [
             {required: true, message: '请输入食品名称', trigger: 'blur'},
@@ -136,6 +165,9 @@
         },
         loading: true,
         typeArr: [],
+        showImagesRowId: "",
+        imageUploadUri: "/api/foodstuff-module/upload_foodstuff_images",
+        imagesPath: ['2340170825192259.png'],
       }
     },
     mounted() {
@@ -162,15 +194,6 @@
           this.typeArr = data.body.foodstuffKindList;
         })
       },
-      getIsDiscountStr(val){
-        console.log("val: "+ val);
-        if(val == 1){
-          return '是';
-        }
-        else{
-          return '否';
-        }
-      },
       handleSizeChange(val) {
         this.loading = true;
         this.pageSize = val;
@@ -183,14 +206,23 @@
         this.loadTableData();
         console.log(`当前页: ${val}`);
       },
+      addNewItem() {
+        for (var key in this.form) {
+          this.form[key] = '';
+        }
+        this.dialogFormVisible = true;
+      },
       submitData(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log(this.form);
             this.$http.post("/api/foodstuff-module/save_foodstuff", [this.form]).then((data) => {
+              this.loadTableData();
+              this.showMessage("success", "操作成功！");
               console.log(data.body);
             }, (response) => {
-              console.log("request error")
+              this.showMessage("warning", response);
+              console.log("request error");
               // 响应错误回调
             })
             this.dialogFormVisible = false;
@@ -200,6 +232,54 @@
           }
         });
       },
+      showMessage(type, msg) {
+        this.$message({
+          message: msg,
+          type: type
+        });
+      },
+      modifyData(rowData) {
+        for (var key in this.form) {
+          this.form[key] = rowData[key];
+        }
+        console.log(this.form);
+        this.dialogFormVisible = true;
+      },
+      deleteData(rowData) {
+        this.$confirm('此操作将永久该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get("/api/foodstuff-module/delete_foodstuff_by_id", {params: {id: rowData.id}}).then((data) => {
+            this.showMessage("success", "操作成功！")
+            console.log("successfully! URI : /api/foodstuff-module/delete_foodstuff_by_id");
+            console.log(data.body);
+            this.loadTableData();
+          }, (response) => {
+            this.showMessage("warning", response);
+            console.log("request error")
+            // 响应错误回调
+          })
+        }).catch(() => {
+          this.showMessage("info", "已取消删除");
+        });
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      showImages(rowData) {
+        this.showImagesRowId = rowData.id;
+        this.dialogImagesVisible = true;
+      },
+      uploadSuccess(response, file, fileList) {
+        console.log(response);
+        console.log(file);
+        console.log(fileList);
+      }
     }
   }
 </script>
