@@ -1,9 +1,7 @@
 <template>
-  <el-container>
-    <el-main>
-      <router-view></router-view>
-    </el-main>
-  </el-container>
+  <el-main>
+    <router-view></router-view>
+  </el-main>
 </template>
 
 <script>
@@ -16,5 +14,7 @@
 </script>
 
 <style scoped>
-
+  .el-main {
+    text-align: center;
+  }
 </style>

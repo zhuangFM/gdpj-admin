@@ -7,22 +7,23 @@
     </el-row>
     <el-row>
       <el-table :data="tableData" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中">
-        <el-table-column prop="name" label="商品名" sortable width="180"></el-table-column>
-        <el-table-column prop="typeid" label="类别" width="180"></el-table-column>
-        <el-table-column prop="origin" label="产地" width="180"></el-table-column>
-        <el-table-column prop="price" label="价格" sortable width="180"></el-table-column>
-        <el-table-column prop="unit" label="单位" width="180"></el-table-column>
-        <el-table-column prop="inventory" label="库存" sortable width="180"></el-table-column>
-        <el-table-column prop="isDiscount" label="是否折扣" width="180"></el-table-column>
+        <el-table-column prop="name" label="商品名" sortable></el-table-column>
+        <el-table-column prop="typeid" label="类别"></el-table-column>
+        <el-table-column prop="origin" label="产地" ></el-table-column>
+        <el-table-column prop="price" label="价格" sortable ></el-table-column>
+        <el-table-column prop="unit" label="单位"></el-table-column>
+        <el-table-column prop="inventory" label="库存" sortable ></el-table-column>
+        <el-table-column prop="isDiscount" label="是否折扣"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="createTime" label="创建时间" sortable></el-table-column>
+        <el-table-column prop="" label="操作" width="200">
           <template slot-scope="scope">
             <el-button-group>
               <el-tooltip class="item" effect="dark" content="编辑" placement="top">
                 <el-button type="primary" icon="el-icon-edit" @click="modifyData(scope.row)"></el-button>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="查看" placement="top">
-                <el-button type="primary" icon="el-icon-view" @click="showImages(scope.row)"></el-button>
+              <el-tooltip class="item" effect="dark" content="查看图片" placement="top">
+                <el-button type="primary" icon="el-icon-picture" @click="showImages(scope.row)"></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="删除" placement="top">
                 <el-button type="primary" icon="el-icon-delete" @click="deleteData(scope.row)"></el-button>
@@ -95,11 +96,12 @@
       </el-dialog>
       <div class="block">
         <el-button type="primary" @click="dialogImagesUploadVisible = true">添加图片</el-button>
-        <el-carousel height="200px" type="card">
+        <el-carousel height="200px" type="card" v-if="imagesPathArr.length>0">
           <el-carousel-item v-for="(item,index) in imagesPathArr" :key="index">
             <img :src="'\\static\\images\\'+showImagesRowId+'\\'+item" style="width: 200px;">
           </el-carousel-item>
         </el-carousel>
+        <h3 v-else>该食品暂无图片！</h3>
       </div>
     </el-dialog>
   </div>
@@ -167,7 +169,7 @@
         typeArr: [],
         showImagesRowId: "",
         imageUploadUri: "/api/foodstuff-module/upload_foodstuff_images",
-        imagesPathArr: ['Photos.jpg'],
+        imagesPathArr: [],
       }
     },
     mounted() {
@@ -210,6 +212,7 @@
         for (var key in this.form) {
           this.form[key] = '';
         }
+        this.formTitle = "新增食品";
         this.dialogFormVisible = true;
       },
       submitData(formName) {
@@ -243,6 +246,7 @@
           this.form[key] = rowData[key];
         }
         console.log(this.form);
+        this.formTitle = "编辑食品";
         this.dialogFormVisible = true;
       },
       deleteData(rowData) {
@@ -271,12 +275,18 @@
       handlePreview(file) {
         console.log(file);
       },
-      getImagePath(){
+      getImagePath() {
         this.$http.get("/api/foodstuff-module/get_foodstuff_images_by_id", {params: {id: this.showImagesRowId}}).then((data) => {
           console.log("successfully! URI : /api/foodstuff-module/get_foodstuff_images_by_id");
           console.log(data.body);
-          this.imagesPathArr = data.body.imagePath.split(",");
-          this.dialogImagesVisible = true;
+          if(data.body.imagePath == null || data.body.imagePath==""){
+            this.imagesPathArr = [];
+            this.dialogImagesVisible = true;
+          }
+          else{
+            this.imagesPathArr = data.body.imagePath.split(",");
+            this.dialogImagesVisible = true;
+          }
         }, (response) => {
           // 响应错误回调
           this.showMessage("warning", response);
