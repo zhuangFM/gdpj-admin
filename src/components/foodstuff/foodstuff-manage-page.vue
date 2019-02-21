@@ -95,9 +95,9 @@
       </el-dialog>
       <div class="block">
         <el-button type="primary" @click="dialogImagesUploadVisible = true">添加图片</el-button>
-        <el-carousel height="">
-          <el-carousel-item v-for="item in imagesPath" :key="item">
-            <img :src="'\\static\\images\\'+showImagesRowId+'\\'+item">
+        <el-carousel height="200px" type="card">
+          <el-carousel-item v-for="(item,index) in imagesPathArr" :key="index">
+            <img :src="'\\static\\images\\'+showImagesRowId+'\\'+item" style="width: 200px;">
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -167,7 +167,7 @@
         typeArr: [],
         showImagesRowId: "",
         imageUploadUri: "/api/foodstuff-module/upload_foodstuff_images",
-        imagesPath: ['2340170825192259.png'],
+        imagesPathArr: ['Photos.jpg'],
       }
     },
     mounted() {
@@ -271,11 +271,24 @@
       handlePreview(file) {
         console.log(file);
       },
+      getImagePath(){
+        this.$http.get("/api/foodstuff-module/get_foodstuff_images_by_id", {params: {id: this.showImagesRowId}}).then((data) => {
+          console.log("successfully! URI : /api/foodstuff-module/get_foodstuff_images_by_id");
+          console.log(data.body);
+          this.imagesPathArr = data.body.imagePath.split(",");
+          this.dialogImagesVisible = true;
+        }, (response) => {
+          // 响应错误回调
+          this.showMessage("warning", response);
+          console.log("request error")
+        })
+      },
       showImages(rowData) {
         this.showImagesRowId = rowData.id;
-        this.dialogImagesVisible = true;
+        this.getImagePath();
       },
       uploadSuccess(response, file, fileList) {
+        this.getImagePath();
         console.log(response);
         console.log(file);
         console.log(fileList);
