@@ -14,7 +14,7 @@
         <el-table-column prop="modifyTime" label="修改时间" sortable width="180"></el-table-column>
         <el-table-column prop="modifier" label="修改人" width="180"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="" label="操作" width="200">
           <template slot-scope="scope">
             <el-button-group>
               <el-tooltip class="item" effect="dark" content="编辑" placement="top">
