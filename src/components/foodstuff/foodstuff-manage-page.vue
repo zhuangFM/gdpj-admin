@@ -85,6 +85,7 @@
         <el-upload
           class="upload-demo"
           :action="imageUploadUri"
+          name="file"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :on-success="uploadSuccess"
