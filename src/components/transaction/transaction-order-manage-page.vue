@@ -8,15 +8,15 @@
 
     <el-row>
       <el-table :data="tableData" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中">
-        <el-table-column prop="id" label="订单号" sortable width="180"></el-table-column>
-        <el-table-column prop="totalMoney" label="订单金额" sortable width="180"></el-table-column>
+        <el-table-column prop="id" label="订单号" sortable></el-table-column>
+        <el-table-column prop="totalMoney" label="订单金额" sortable ></el-table-column>
         <el-table-column prop="buyerId" label="买家"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="180" sortable></el-table-column>
-        <el-table-column prop="creator" label="创建人" width="180"></el-table-column>
-        <el-table-column prop="modifyTime" label="修改时间" sortable width="180" sortable></el-table-column>
-        <el-table-column prop="modifier" label="修改人" width="180"></el-table-column>
-        <el-table-column prop="status" label="订单状态" width="180" sortable></el-table-column>
-        <el-table-column prop="" label="操作">
+        <el-table-column prop="createTime" label="创建时间" sortable></el-table-column>
+        <el-table-column prop="creator" label="创建人"></el-table-column>
+        <el-table-column prop="modifyTime" label="修改时间" sortable></el-table-column>
+        <el-table-column prop="modifier" label="修改人"></el-table-column>
+        <el-table-column prop="status" label="订单状态" sortable></el-table-column>
+        <el-table-column prop="" label="操作" width="190">
           <template slot-scope="scope">
             <el-button-group>
               <el-tooltip class="item" effect="dark" content="编辑" placement="top">
