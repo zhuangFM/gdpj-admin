@@ -7,12 +7,13 @@ import './plugins/element.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueResource from 'vue-resource'
+import ECharts from 'echarts'
 
 
-Vue.config.productionTip = false
-Vue.use(ElementUI)
-Vue.use(VueResource)
-
+Vue.config.productionTip = false;
+Vue.use(ElementUI);
+Vue.use(VueResource);
+Vue.prototype.$echarts = ECharts;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
