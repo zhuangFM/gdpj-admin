@@ -17,7 +17,7 @@
           <template slot-scope="scope">
             <el-button-group>
               <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                <el-button type="primary" icon="el-icon-edit"></el-button>
+                <el-button type="primary" icon="el-icon-edit" disabled="true"></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="查看日志详情" placement="top">
                 <el-button type="primary" icon="el-icon-view" @click="showTableDetail(scope.row)"></el-button>

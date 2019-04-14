@@ -16,7 +16,7 @@
           <template slot-scope="scope">
             <el-button-group>
               <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                <el-button type="primary" icon="el-icon-edit"></el-button>
+                <el-button type="primary" icon="el-icon-edit" disabled="true"></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="查看相关订单详情" placement="top">
                 <el-button type="primary" icon="el-icon-view" @click="showTableDetail(scope.row)"></el-button>
@@ -46,7 +46,7 @@
         <el-table-column prop="id" label="序号" width="180" sortable></el-table-column>
         <el-table-column prop="transactionOrderId" label="订单号" width="180"></el-table-column>
         <el-table-column prop="foodstuffName" label="食品名称" sortable></el-table-column>
-        <el-table-column prop="amount" label="数量" width="180" sortable></el-table-column>
+        <el-table-column prop="amount" label="金额" width="180" sortable></el-table-column>
       </el-table>
     </el-dialog>
   </div>

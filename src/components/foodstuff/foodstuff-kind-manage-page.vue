@@ -21,7 +21,7 @@
                 <el-button type="primary" icon="el-icon-edit" @click="modifyData(scope.row)"></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="查看" placement="top">
-                <el-button type="primary" icon="el-icon-view"></el-button>
+                <el-button type="primary" icon="el-icon-view" disabled="true"></el-button>
               </el-tooltip>
               <el-tooltip class="item" effect="dark" content="删除" placement="top">
                 <el-button type="primary" icon="el-icon-delete" @click="deleteData(scope.row)"></el-button>
